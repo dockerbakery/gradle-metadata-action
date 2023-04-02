@@ -27,4 +27,4 @@ jobs:
 
       - name: Validate
         run: |
-          docker buildx bake -f "${{ steps.meta.outputs.bake-file }}" --print github-metadata-action
+          docker buildx bake -f "${{ steps.meta.outputs.bake-file }}" --print gradle-metadata-action
