@@ -41,5 +41,5 @@ echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 gh_group_end
 
 gh_group "Bake definition"
-docker buildx bake -f "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl" --print github-metadata-action
+docker buildx bake -f "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl" --print gradle-metadata-action
 gh_group_end
