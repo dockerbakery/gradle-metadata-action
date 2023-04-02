@@ -1,0 +1,22 @@
+name: Gradle Metadata action
+description: Gradle Metadata Action for Docker Buildx Bake.
+author: Docker Bakery
+
+branding:
+  color: white
+  icon: git-branch
+
+outputs:
+  bake-file:
+    description: Bake definiton file
+    value: ${{ steps.meta.outputs.bake-file }}
+
+runs:
+  using: composite
+  steps:
+    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+      shell: bash
+    - id: meta
+      name: Gradle Metadata action
+      run: gradle-metadata-action.sh
+      shell: bash
