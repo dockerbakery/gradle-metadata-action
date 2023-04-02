@@ -8,7 +8,6 @@ gh_group() { echo "::group::$1"; }
 gh_group_end() { echo "::endgroup::"; }
 gh_set_output() { echo "$1=$2" >> "$GITHUB_OUTPUT"; }
 gh_set_env() { 
-    echo "- $1"="$2"
     export "$1"="$2"
     echo "$1=\"$2\"" >> "$GITHUB_ENV";
 }
@@ -39,6 +38,15 @@ gh_group "Processing Gradle context"
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 echo "Output:"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
+gh_group_end
+
+gh_group "Environment variables"
+echo "- GRADLE_VERSION=${GRADLE_VERSION}"
+echo "- GRADLE_PROJECT_NAME=${GRADLE_PROJECT_NAME}"
+echo "- GRADLE_PROJECT_VERSION=${GRADLE_PROJECT_VERSION}"
+echo "- GRADLE_PROJECT_PROFILE=${GRADLE_PROJECT_PROFILE}"
+echo "- GRADLE_PROJECT_TARGET_COMPATIBILITY=${GRADLE_PROJECT_TARGET_COMPATIBILITY}"
+echo "- GRADLE_PROJECT_SOURCE_COMPATIBILITY=${GRADLE_PROJECT_SOURCE_COMPATIBILITY}"
 gh_group_end
 
 gh_group "Bake definition"
