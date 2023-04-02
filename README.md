@@ -62,8 +62,8 @@ jobs:
             type=semver,pattern={{major}}.{{minor}}
             type=sha
 
-      - name: GitHub meta
-        id: github-meta
+      - name: Gradle meta
+        id: gradle-meta
         uses: dockerbakery/gradle-metadata-action@v1
 
       - uses: docker/bake-action@v2
@@ -71,7 +71,7 @@ jobs:
           files: |
             ./docker-bake.hcl
             ${{ steps.meta.outputs.bake-file }}
-            ${{ steps.github-meta.outputs.bake-file }}
+            ${{ steps.gradle-meta.outputs.bake-file }}
           targets: build
 ```
 
