@@ -18,6 +18,8 @@ jobs:
       - name: Test runs
         id: meta
         uses: ./
+        with:
+          context: "test"
 
       - name: Action output
         run: |
