@@ -24,11 +24,6 @@ gradle_project_source() { ./gradlew properties | grep "^sourceCompatibility:" | 
 GMA_CONTEXT="$1"
 
 # Pre-flight checks
-if [ ! -f "./gradlew" ]; then
-    echo "Gradle wrapper not found!"
-    exit 1
-fi
-
 # Switching Gradle context directory
 gh_group "Activating Gradle context"
 if [[ "${GMA_CONTEXT}" != "" ]]; then
@@ -41,6 +36,12 @@ else
     echo "No Gradle context specified, using current directory."
 fi
 gh_group_end
+
+# Checking Gradle wrapper
+if [ ! -f "./gradlew" ]; then
+    echo "Gradle wrapper not found!"
+    exit 1
+fi
 
 # Main
 gh_set_env "GRADLE_VERSION" "$(gradle_version)"
