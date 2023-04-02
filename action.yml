@@ -11,6 +11,10 @@ inputs:
     description: The context directory
     required: false
     default: ""
+  version:
+    description: The version of the Gradle project
+    required: false
+    default: ""
 
 outputs:
   bake-file:
@@ -25,5 +29,7 @@ runs:
     - id: meta
       name: Gradle Metadata action
       run: |
-        gradle-metadata-action.sh "${{ inputs.context }}"
+        gradle-metadata-action.sh \
+          "${{ inputs.context }}" \
+          "${{ inputs.version }}"
       shell: bash
