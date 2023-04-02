@@ -25,7 +25,5 @@ runs:
     - id: meta
       name: Gradle Metadata action
       run: |
-        echo "::group::Gradle Metadata action"
         gradle-metadata-action.sh "${{ inputs.context }}"
-        echo "::endgroup::"
       shell: bash
