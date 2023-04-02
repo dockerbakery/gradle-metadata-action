@@ -8,6 +8,7 @@ gh_group() { echo "::group::$1"; }
 gh_group_end() { echo "::endgroup::"; }
 gh_set_output() { echo "$1=$2" >> "$GITHUB_OUTPUT"; }
 gh_set_env() { 
+    echo "- $1"="$2"
     export "$1"="$2"
     echo "$1=\"$2\"" >> "$GITHUB_ENV";
 }
