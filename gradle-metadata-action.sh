@@ -8,8 +8,8 @@ gh_group() { echo "::group::$1"; }
 gh_group_end() { echo "::endgroup::"; }
 gh_set_output() { echo "$1=$2" >> "$GITHUB_OUTPUT"; }
 gh_set_env() { 
+    export "$1"="$2"
     echo "$1=$2" >> "$GITHUB_ENV";
-    export "$1=$2"
 }
 
 # Gradle helpers
