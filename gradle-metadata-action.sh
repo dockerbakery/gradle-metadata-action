@@ -20,11 +20,27 @@ gradle_project_profile() { ./gradlew properties | grep "^profile:" | cut -d " " 
 gradle_project_target() { ./gradlew properties | grep "^targetCompatibility:" | cut -d " " -f 2; }
 gradle_project_source() { ./gradlew properties | grep "^sourceCompatibility:" | cut -d " " -f 2; }
 
+# Action Inputs
+GMA_CONTEXT="$1"
+
 # Pre-flight checks
 if [ ! -f "./gradlew" ]; then
     echo "Gradle wrapper not found!"
     exit 1
 fi
+
+# Switching Gradle context directory
+gh_group "Activating Gradle context"
+if [[ "${GMA_CONTEXT}" != "" ]]; then
+    echo "Gradle context specified, switching to ${GMA_CONTEXT}."
+    cd "${GMA_CONTEXT}" || {
+        echo "Unable to load Gradle context!"
+        exit 1
+    }
+else
+    echo "No Gradle context specified, using current directory."
+fi
+gh_group_end
 
 # Main
 gh_set_env "GRADLE_VERSION" "$(gradle_version)"

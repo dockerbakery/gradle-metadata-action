@@ -6,6 +6,12 @@ branding:
   color: white
   icon: git-branch
 
+inputs:
+  context:
+    description: The context directory
+    required: false
+    default: ""
+
 outputs:
   bake-file:
     description: Bake definiton file
@@ -18,5 +24,8 @@ runs:
       shell: bash
     - id: meta
       name: Gradle Metadata action
-      run: gradle-metadata-action.sh
+      run: |
+        echo "::group::Gradle Metadata action"
+        gradle-metadata-action.sh "${{ inputs.context }}"
+        echo "::endgroup::"
       shell: bash
