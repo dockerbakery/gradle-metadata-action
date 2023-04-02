@@ -75,6 +75,15 @@ jobs:
           targets: build
 ```
 
+## Input
+
+Following inputs can be used as `step.with` keys
+
+| Name      | Type   | Description                                                                            |
+| --------- | ------ | -------------------------------------------------------------------------------------- |
+| `context` | String | Where to get context data. Allowed options are: workflow (default "current directory). |
+| `version` | String | Set the version of the Gradle project (override the `version` property)                |
+
 ## Output
 
 > Output of `docker buildx bake -f gradle-metadata-action.hcl --print gradle-metadata-action` command.
