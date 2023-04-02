@@ -14,12 +14,12 @@ gh_set_env() {
 }
 
 # Gradle helpers
-gradle_version() { ./gradlew --version | grep "Gradle" | cut -d " " -f 2; }
-gradle_project_name() { ./gradlew properties | grep "name:" | cut -d " " -f 2; }
-gradle_project_version() { ./gradlew properties | grep "version:" | cut -d " " -f 2; }
-gradle_project_profile() { ./gradlew properties | grep "profile:" | cut -d " " -f 2; }
-gradle_project_target() { ./gradlew properties | grep "targetCompatibility:" | cut -d " " -f 2; }
-gradle_project_source() { ./gradlew properties | grep "sourceCompatibility:" | cut -d " " -f 2; }
+gradle_version() { ./gradlew --version | grep "^Gradle" | cut -d " " -f 2; }
+gradle_project_name() { ./gradlew properties | grep "^name:" | cut -d " " -f 2; }
+gradle_project_version() { ./gradlew properties | grep "^version:" | cut -d " " -f 2; }
+gradle_project_profile() { ./gradlew properties | grep "^profile:" | cut -d " " -f 2; }
+gradle_project_target() { ./gradlew properties | grep "^targetCompatibility:" | cut -d " " -f 2; }
+gradle_project_source() { ./gradlew properties | grep "^sourceCompatibility:" | cut -d " " -f 2; }
 
 # Pre-flight checks
 if [ ! -f "./gradlew" ]; then
