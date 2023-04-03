@@ -5,3 +5,7 @@
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/8.0.2/samples
  * This project uses @Incubating APIs which are subject to change.
  */
+version = '1.0-SNAPSHOT'
+
+targetCompatibility = 11
+sourceCompatibility = 11
