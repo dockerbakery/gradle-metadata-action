@@ -48,8 +48,11 @@ fi
 gh_set_env "GRADLE_VERSION" "$(gradle_version)"
 gh_set_env "GRADLE_PROJECT_NAME" "$(gradle_project_name)"
 
+GRADLE_BUILD_ARTIFACT="${GRADLE_PROJECT_NAME}"
+
 if [[ -n "${GMA_VERSION}" ]]; then
     gh_set_env "GRADLE_PROJECT_VERSION" "$GMA_VERSION"
+    GRADLE_BUILD_ARTIFACT+="-${GMA_VERSION}"
 else
     # If the project.version === "unspecified", then we don't want to set it
     _GRADLE_PROJECT_VERSION="$(gradle_project_version)"
@@ -57,12 +60,17 @@ else
         gh_set_env "GRADLE_PROJECT_VERSION" ""
     else
         gh_set_env "GRADLE_PROJECT_VERSION" "${_GRADLE_PROJECT_VERSION}"
+        GRADLE_BUILD_ARTIFACT+="-${_GRADLE_PROJECT_VERSION}"
     fi
 fi
+
+GRADLE_BUILD_ARTIFACT+=".jar"
+gh_set_env "GRADLE_BUILD_ARTIFACT" "${GRADLE_BUILD_ARTIFACT}"
 
 gh_set_env "GRADLE_PROJECT_PROFILE" "$(gradle_project_profile)"
 gh_set_env "GRADLE_PROJECT_TARGET_COMPATIBILITY" "$(gradle_project_target)"
 gh_set_env "GRADLE_PROJECT_SOURCE_COMPATIBILITY" "$(gradle_project_source)"
+
 
 gh_group "Processing Gradle context"
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
@@ -72,6 +80,7 @@ gh_group_end
 
 gh_group "Environment variables"
 echo "- GRADLE_VERSION=${GRADLE_VERSION}"
+echo "- GRADLE_BUILD_ARTIFACT=${GRADLE_BUILD_ARTIFACT}"
 echo "- GRADLE_PROJECT_NAME=${GRADLE_PROJECT_NAME}"
 echo "- GRADLE_PROJECT_VERSION=${GRADLE_PROJECT_VERSION}"
 echo "- GRADLE_PROJECT_PROFILE=${GRADLE_PROJECT_PROFILE}"
