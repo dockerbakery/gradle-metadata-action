@@ -5,3 +5,12 @@
  * Learn more about Gradle by exploring our samples at https://docs.gradle.org/8.0.2/samples
  * This project uses @Incubating APIs which are subject to change.
  */
+println "Project name: " + project.name
+println "Project version: " + project.version
+println "Project group: " + project.group
+
+if (project.version != "") {
+    println "Project artifact: ${project.name}-${project.version}.jar"
+} else {
+    println "Project artifact: ${project.name}.jar"
+}

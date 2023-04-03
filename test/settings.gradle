@@ -9,4 +9,3 @@
  */
 
 rootProject.name = 'gradle-metadata-action-example-project'
-version = '1.0-SNAPSHOT'
