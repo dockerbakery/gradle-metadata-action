@@ -7,5 +7,7 @@
  */
 version = '1.0-SNAPSHOT'
 
-targetCompatibility = 11
-sourceCompatibility = 11
+java {
+    targetCompatibility = 11
+    sourceCompatibility = 11
+}
