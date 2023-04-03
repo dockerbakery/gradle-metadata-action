@@ -51,7 +51,13 @@ gh_set_env "GRADLE_PROJECT_NAME" "$(gradle_project_name)"
 if [[ -n "${GMA_VERSION}" ]]; then
     gh_set_env "GRADLE_PROJECT_VERSION" "$GMA_VERSION"
 else
-    gh_set_env "GRADLE_PROJECT_VERSION" "$(gradle_project_version)"
+    # If the project.version === "unspecified", then we don't want to set it
+    _GRADLE_PROJECT_VERSION="$(gradle_project_version)"
+    if [[ "${_GRADLE_PROJECT_VERSION}" == "unspecified" ]]; then
+        gh_set_env "GRADLE_PROJECT_VERSION" ""
+    else
+        gh_set_env "GRADLE_PROJECT_VERSION" "${_GRADLE_PROJECT_VERSION}"
+    fi
 fi
 
 gh_set_env "GRADLE_PROJECT_PROFILE" "$(gradle_project_profile)"
