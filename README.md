@@ -106,7 +106,7 @@ Following inputs can be used as `step.with` keys
         "GRADLE_PROJECT_PROFILE": "production",
         "GRADLE_PROJECT_TARGET_COMPATIBILITY": "11",
         "GRADLE_PROJECT_SOURCE_COMPATIBILITY": "11",
-        "GRADLE_BUILD_ARTIFACT": "example-project-8.0.2.jar"
+        "GRADLE_BUILD_ARTIFACT": "example-project-1.0.0-SNAPSHOT.jar"
       }
     }
   }
