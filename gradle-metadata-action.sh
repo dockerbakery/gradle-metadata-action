@@ -1,5 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2155
+set -e
 
 GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH}
 GITHUB_ENV=${GITHUB_ENV}
