@@ -100,6 +100,7 @@ Following inputs can be used as `step.with` keys
   "target": {
     "gradle-metadata-action": {
       "args": {
+        "GRADLE_VERSION": "7.6",
         "GRADLE_PROJECT_NAME": "example-project",
         "GRADLE_PROJECT_DESCRIPTION": "example-project",
         "GRADLE_PROJECT_GROUP": "com.example",

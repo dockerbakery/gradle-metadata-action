@@ -23,6 +23,8 @@ class GradleBuildManifest implements Plugin<Project> {
         project.task('build-manifest') {
             doLast {
                 def manifest = [
+                    // Gradle
+                    "GRADLE_VERSION": project.gradle.gradleVersion,
                     // Project
                     "PROJECT_NAME": project.name,
                     "PROJECT_DESCRIPTION": project.description ? project.description : "",

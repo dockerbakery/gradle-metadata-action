@@ -1,3 +1,5 @@
+variable "GRADLE_VERSION" {}
+
 variable "GRADLE_PROJECT_NAME" {}
 variable "GRADLE_PROJECT_DESCRIPTION" {}
 variable "GRADLE_PROJECT_GROUP" {}
@@ -13,6 +15,8 @@ variable "JAVA_VERSION" {}
 
 target "gradle-metadata-action" {
     args = {
+        GRADLE_VERSION = "${GRADLE_VERSION}"
+
         GRADLE_PROJECT_NAME = "${GRADLE_PROJECT_NAME}"
         GRADLE_PROJECT_DESCRIPTION = "${GRADLE_PROJECT_DESCRIPTION}"
         GRADLE_PROJECT_GROUP = "${GRADLE_PROJECT_GROUP}"
@@ -22,7 +26,7 @@ target "gradle-metadata-action" {
         GRADLE_BUILD_ARTIFACT = "${GRADLE_BUILD_ARTIFACT}"
         GRADLE_TARGET_COMPATIBILITY = "${GRADLE_TARGET_COMPATIBILITY}"
         GRADLE_SOURCE_COMPATIBILITY = "${GRADLE_SOURCE_COMPATIBILITY}"
-        
+
         JAVA_VENDOR = "${JAVA_VENDOR}"
         JAVA_VERSION = "${JAVA_VERSION}"
     }

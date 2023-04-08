@@ -61,7 +61,8 @@ cat build-manifest.json
 gh_group_end
 
 gh_group "Processing Gradle context"
-# Set environment variables
+# Gradle
+gh_set_env "GRADLE_VERSION" "$(gradle_get_prop "GRADLE_VERSION")"
 # Project
 gh_set_env "GRADLE_PROJECT_NAME" "$(gradle_get_prop "PROJECT_NAME")"
 gh_set_env "GRADLE_PROJECT_DESCRIPTION" "$(gradle_get_prop "PROJECT_DESCRIPTION")"
@@ -86,6 +87,7 @@ gh_group_end
 
 
 gh_group "Environment variables"
+echo "- GRADLE_VERSION=${GRADLE_VERSION}"
 echo "- GRADLE_PROJECT_NAME=${GRADLE_PROJECT_NAME}"
 echo "- GRADLE_PROJECT_DESCRIPTION=${GRADLE_PROJECT_DESCRIPTION}"
 echo "- GRADLE_PROJECT_GROUP=${GRADLE_PROJECT_GROUP}"
@@ -95,6 +97,8 @@ echo "- GRADLE_BUILD_ARTIFACT_ID=${GRADLE_BUILD_ARTIFACT_ID}"
 echo "- GRADLE_BUILD_ARTIFACT=${GRADLE_BUILD_ARTIFACT}"
 echo "- GRADLE_TARGET_COMPATIBILITY=${GRADLE_TARGET_COMPATIBILITY}"
 echo "- GRADLE_SOURCE_COMPATIBILITY=${GRADLE_SOURCE_COMPATIBILITY}"
+echo "- JAVA_VENDOR=${JAVA_VENDOR}"
+echo "- JAVA_VERSION=${JAVA_VERSION}"
 gh_group_end
 
 gh_group "Bake definition"
