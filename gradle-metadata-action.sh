@@ -87,8 +87,20 @@ gh_set_env "GRADLE_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILIT
 gh_set_env "JAVA_VENDOR" "$(gradle_get_prop "JAVA_VENDOR")"
 gh_set_env "JAVA_VERSION" "$(gradle_get_prop "JAVA_VERSION")"
 
+# Action Outputs
+gh_set_output "name" "${GRADLE_PROJECT_NAME}"
+gh_set_output "description" "${GRADLE_PROJECT_DESCRIPTION}"
+gh_set_output "group" "${GRADLE_PROJECT_GROUP}"
+gh_set_output "profile" "${GRADLE_PROJECT_PROFILE}"
+gh_set_output "version" "${GRADLE_PROJECT_VERSION}"
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
+
 echo "Output:"
+echo "- name = ${GRADLE_PROJECT_NAME}"
+echo "- description = ${GRADLE_PROJECT_DESCRIPTION}"
+echo "- group = ${GRADLE_PROJECT_GROUP}"
+echo "- profile = ${GRADLE_PROJECT_PROFILE}"
+echo "- version = ${GRADLE_PROJECT_VERSION}"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 gh_group_end
 

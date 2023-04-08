@@ -17,6 +17,21 @@ inputs:
     default: ""
 
 outputs:
+  name:
+    description: The gradle project name
+    value: ${{ steps.meta.outputs.name}}
+  description:
+    description: The gradle project description
+    value: ${{ steps.meta.outputs.description}}
+  group:
+    description: The gradle project group
+    value: ${{ steps.meta.outputs.group}}
+  profile:
+    description: The gradle project profile
+    value: ${{ steps.meta.outputs.profile}}
+  version:
+    description: The gradle project version
+    value: ${{ steps.meta.outputs.version}}
   bake-file:
     description: Bake definiton file
     value: ${{ steps.meta.outputs.bake-file }}
