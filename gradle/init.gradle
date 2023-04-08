@@ -1,0 +1,67 @@
+/**
+ * A Gradle plugin to generate a JSON file with build information.
+ *
+ * Reference:
+ * - https://github.com/nwillc/buildInfo/blob/master/src/main/groovy/com/github/nwillc/buildInfo/BuildInfoPlugin.groovy
+ */
+
+import java.nio.file.Paths
+import groovy.json.JsonOutput
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+class GradleBuildManifest implements Plugin<Project> {
+    private static final String[] SYSTEM_PROPERTIES = [
+        "user.name", 
+        "java.vendor", 
+        "java.version", 
+        "os.arch", 
+        "os.name", 
+        "os.version",
+    ]
+
+    @Override
+    void apply(Project project) {
+        project.extensions.create("buildManifest", GradleBuildManifest.Extension)
+
+        project.task('build-manifest') {
+            doLast {
+                def manifest = [
+                    // Project
+                    "PROJECT_NAME": project.name,
+                    "PROJECT_DESCRIPTION": project.description,
+                    "PROJECT_GROUP": project.group,
+                    "PROJECT_PROFILE": project.profile,
+                    "PROJECT_VERSION": project.version,
+                    // Build
+                    "BUILD_ARTIFACT": "${project.name}-${project.version}",
+                    // Compatibility
+                    "SOURCE_COMPATIBILITY": project.sourceCompatibility.toString(),
+                    "TARGET_COMPATIBILITY": project.targetCompatibility.toString(),
+                ]
+
+                SYSTEM_PROPERTIES.each { 
+                    def key = it.replace('.', '_').toUpperCase()
+                    manifest[key] = System.getProperty(it)
+                }
+
+                println "Generating " + project.buildManifest.output
+                new File(project.buildManifest.output).write JsonOutput.prettyPrint(JsonOutput.toJson(manifest))
+            }
+        }
+    }
+
+    static class Extension {
+        String output = Paths.get("build-manifest.json").toString()
+    }
+}
+
+class GradleBuildManifestPlugin implements Plugin<Gradle> {
+    void apply(Gradle gradle) {
+        gradle.allprojects { project -> 
+            project.apply plugin: GradleBuildManifest
+        }
+    }
+}
+
+apply plugin: GradleBuildManifestPlugin

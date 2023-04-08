@@ -24,10 +24,11 @@ outputs:
 runs:
   using: composite
   steps:
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
+    - name: "uses: "
+      run: echo "${{ github.action_path }}" >> $GITHUB_PATH
       shell: bash
-    - id: meta
-      name: Gradle Metadata action
+    - name: Gradle Metadata Action
+      id: meta
       run: |
         gradle-metadata-action.sh \
           "${{ inputs.context }}" \

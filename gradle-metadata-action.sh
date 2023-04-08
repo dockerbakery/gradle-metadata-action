@@ -1,7 +1,9 @@
 #!/bin/bash
 # shellcheck disable=SC2155
 
-GITHUB_OUTPUT=${GITHUB_OUTPUT:-/tmp/github_output}
+GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH}
+GITHUB_ENV=${GITHUB_ENV}
+GITHUB_OUTPUT=${GITHUB_OUTPUT}
 
 # GitHub Actions helpers
 gh_group() { echo "::group::$1"; }
@@ -13,12 +15,26 @@ gh_set_env() {
 }
 
 # Gradle helpers
-gradle_version() { ./gradlew --version | grep "^Gradle" | cut -d " " -f 2; }
-gradle_project_name() { ./gradlew properties | grep "^name:" | cut -d " " -f 2; }
-gradle_project_version() { ./gradlew properties | grep "^version:" | cut -d " " -f 2; }
-gradle_project_profile() { ./gradlew properties | grep "^profile:" | cut -d " " -f 2; }
-gradle_project_target() { ./gradlew properties | grep "^targetCompatibility:" | cut -d " " -f 2; }
-gradle_project_source() { ./gradlew properties | grep "^sourceCompatibility:" | cut -d " " -f 2; }
+GRADLE_WRAPPER="./gradlew"
+if [ ! -f "${GRADLE_WRAPPER}" ]; then
+    if [ ! "$(command -v gradle)" ]; then
+        echo "[error]: Gradle wrapper not found!"
+        exit 1
+    else
+        echo "[info]: using system Gradle wrapper"
+        GRADLE_WRAPPER="gradle"
+    fi
+fi
+
+gradle_exec() {
+    set -x
+    ${GRADLE_WRAPPER} --no-daemon --info "$@"
+    set +x
+}
+
+gradle_get_prop() {
+    jq -r ".${1}" "build-manifest.json"
+}
 
 # Action Inputs
 GMA_CONTEXT="$1"
@@ -30,7 +46,7 @@ gh_group "Activating Gradle context"
 if [[ "${GMA_CONTEXT}" != "" ]]; then
     echo "Gradle context specified, switching to ${GMA_CONTEXT}."
     cd "${GMA_CONTEXT}" || {
-        echo "Error: Unable to load Gradle context!"
+        echo "[error]: Unable to load Gradle context!"
         exit 1
     }
 else
@@ -38,52 +54,38 @@ else
 fi
 gh_group_end
 
-# Checking Gradle wrapper
-if [ ! -f "./gradlew" ]; then
-    echo "Error: Gradle wrapper not found!"
-    exit 1
-fi
-
 # Main
-gh_set_env "GRADLE_VERSION" "$(gradle_version)"
-gh_set_env "GRADLE_PROJECT_NAME" "$(gradle_project_name)"
-
-GRADLE_BUILD_ARTIFACT="${GRADLE_PROJECT_NAME}"
-
-if [[ -n "${GMA_VERSION}" ]]; then
-    gh_set_env "GRADLE_PROJECT_VERSION" "$GMA_VERSION"
-    GRADLE_BUILD_ARTIFACT+="-${GMA_VERSION}"
-else
-    # If the project.version === "unspecified", then we don't want to set it
-    _GRADLE_PROJECT_VERSION="$(gradle_project_version)"
-    if [[ "${_GRADLE_PROJECT_VERSION}" == "unspecified" ]]; then
-        gh_set_env "GRADLE_PROJECT_VERSION" ""
-    else
-        gh_set_env "GRADLE_PROJECT_VERSION" "${_GRADLE_PROJECT_VERSION}"
-        GRADLE_BUILD_ARTIFACT+="-${_GRADLE_PROJECT_VERSION}"
-    fi
-fi
-
-GRADLE_BUILD_ARTIFACT+=".jar"
-gh_set_env "GRADLE_BUILD_ARTIFACT" "${GRADLE_BUILD_ARTIFACT}"
-
-gh_set_env "GRADLE_PROJECT_PROFILE" "$(gradle_project_profile)"
-gh_set_env "GRADLE_PROJECT_TARGET_COMPATIBILITY" "$(gradle_project_target)"
-gh_set_env "GRADLE_PROJECT_SOURCE_COMPATIBILITY" "$(gradle_project_source)"
-
+gh_group "Generating Gradle build manifest"
+gradle_exec --init-script "${GITHUB_ACTION_PATH}/gradle/init.gradle" build-manifest
+gh_group_end
 
 gh_group "Processing Gradle context"
+# Set environment variables
+# Project
+gh_set_env "GRADLE_PROJECT_NAME" "$(gradle_get_prop "PROJECT_NAME")"
+gh_set_env "GRADLE_PROJECT_DESCRIPTION" "$(gradle_get_prop "PROJECT_DESCRIPTION")"
+gh_set_env "GRADLE_PROJECT_GROUP" "$(gradle_get_prop "PROJECT_GROUP")"
+gh_set_env "GRADLE_PROJECT_PROFILE" "$(gradle_get_prop "PROJECT_PROFILE")"
+gh_set_env "GRADLE_PROJECT_VERSION" "$(gradle_get_prop "PROJECT_VERSION")"
+# Build
+gh_set_env "GRADLE_BUILD_ARTIFACT" $(gradle_get_prop "BUILD_ARTIFACT")
+# Compatibility
+gh_set_env "GRADLE_PROJECT_TARGET_COMPATIBILITY" "$(gradle_get_prop "TARGET_COMPATIBILITY")"
+gh_set_env "GRADLE_PROJECT_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILITY")"
+
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 echo "Output:"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 gh_group_end
 
+
 gh_group "Environment variables"
-echo "- GRADLE_VERSION=${GRADLE_VERSION}"
-echo "- GRADLE_BUILD_ARTIFACT=${GRADLE_BUILD_ARTIFACT}"
 echo "- GRADLE_PROJECT_NAME=${GRADLE_PROJECT_NAME}"
-echo "- GRADLE_PROJECT_VERSION=${GRADLE_PROJECT_VERSION}"
+echo "- GRADLE_PROJECT_DESCRIPTION=${GRADLE_PROJECT_DESCRIPTION}"
+echo "- GRADLE_PROJECT_GROUP=${GRADLE_PROJECT_GROUP}"
 echo "- GRADLE_PROJECT_PROFILE=${GRADLE_PROJECT_PROFILE}"
+echo "- GRADLE_PROJECT_VERSION=${GRADLE_PROJECT_VERSION}"
+echo "- GRADLE_BUILD_ARTIFACT=${GRADLE_BUILD_ARTIFACT}"
 echo "- GRADLE_PROJECT_TARGET_COMPATIBILITY=${GRADLE_PROJECT_TARGET_COMPATIBILITY}"
 echo "- GRADLE_PROJECT_SOURCE_COMPATIBILITY=${GRADLE_PROJECT_SOURCE_COMPATIBILITY}"
 gh_group_end
