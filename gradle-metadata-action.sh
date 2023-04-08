@@ -61,8 +61,6 @@ cat build-manifest.json
 gh_group_end
 
 gh_group "Processing Gradle context"
-
-# Environment variables
 # Gradle
 gh_set_env "GRADLE_VERSION" "$(gradle_get_prop "GRADLE_VERSION")"
 # Project
@@ -75,18 +73,18 @@ gh_set_env "GRADLE_PROJECT_VERSION" "$(gradle_get_prop "PROJECT_VERSION")"
 gh_set_env "GRADLE_BUILD_ARTIFACT_ID" $(gradle_get_prop "BUILD_ARTIFACT_ID")
 gh_set_env "GRADLE_BUILD_ARTIFACT" $(gradle_get_prop "BUILD_ARTIFACT")
 # Compatibility
-gh_set_env "GRADLE_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILITY")"
 gh_set_env "GRADLE_TARGET_COMPATIBILITY" "$(gradle_get_prop "TARGET_COMPATIBILITY")"
+gh_set_env "GRADLE_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILITY")"
 
 # Java
 gh_set_env "JAVA_VENDOR" "$(gradle_get_prop "JAVA_VENDOR")"
 gh_set_env "JAVA_VERSION" "$(gradle_get_prop "JAVA_VERSION")"
 
-# Action Output
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 echo "Output:"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 gh_group_end
+
 
 gh_group "Environment variables"
 echo "- GRADLE_VERSION=${GRADLE_VERSION}"
