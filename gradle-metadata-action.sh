@@ -56,6 +56,8 @@ gh_group_end
 # Main
 gh_group "Generating Gradle build manifest"
 gradle_exec --init-script "${GITHUB_ACTION_PATH}/gradle/init.gradle" build-manifest
+echo "Output:"
+cat build-manifest.json
 gh_group_end
 
 gh_group "Processing Gradle context"
