@@ -17,20 +17,8 @@ gh_set_env() {
 
 # Gradle helpers
 GRADLE_WRAPPER="./gradlew"
-if [ ! -f "${GRADLE_WRAPPER}" ]; then
-    if [ ! "$(command -v gradle)" ]; then
-        echo "[error]: Gradle wrapper not found!"
-        exit 1
-    else
-        echo "[info]: using system Gradle wrapper"
-        GRADLE_WRAPPER="gradle"
-    fi
-fi
-
 gradle_exec() {
-    set -x
-    ${GRADLE_WRAPPER} --no-daemon --info "$@"
-    set +x
+    ${GRADLE_WRAPPER} --no-daemon --quiet "$@"
 }
 
 gradle_get_prop() {
@@ -44,6 +32,16 @@ GMA_VERSION="$2"
 # Pre-flight checks
 # Switching Gradle context directory
 gh_group "Activating Gradle context"
+if [ ! -f "${GRADLE_WRAPPER}" ]; then
+    if [ ! "$(command -v gradle)" ]; then
+        echo "[error]: Gradle wrapper not found!"
+        exit 1
+    else
+        echo "[info]: using system Gradle wrapper"
+        GRADLE_WRAPPER="gradle"
+    fi
+fi
+
 if [[ "${GMA_CONTEXT}" != "" ]]; then
     echo "Gradle context specified, switching to ${GMA_CONTEXT}."
     cd "${GMA_CONTEXT}" || {
