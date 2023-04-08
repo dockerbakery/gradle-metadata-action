@@ -1,6 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC2155
 # shellcheck disable=SC2269
+# shellcheck disable=SC2086
 set -e
 
 GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH}
