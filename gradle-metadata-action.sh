@@ -29,7 +29,7 @@ if [[ -n "${GMA_VERSION}" ]]; then
 fi
 
 gradle_exec() {
-    ${GRADLE_WRAPPER} --no-daemon --quiet "${GRADLE_FLAGS}" "$@"
+    ${GRADLE_WRAPPER} --no-daemon --quiet "$@" "${GRADLE_FLAGS}"
 }
 
 gradle_get_prop() {
