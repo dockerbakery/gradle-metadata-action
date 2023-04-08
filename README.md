@@ -64,7 +64,7 @@ jobs:
 
       - name: Gradle meta
         id: gradle-meta
-        uses: dockerbakery/gradle-metadata-action@v1
+        uses: dockerbakery/gradle-metadata-action@v2
 
       - uses: docker/bake-action@v2
         with:
@@ -100,13 +100,16 @@ Following inputs can be used as `step.with` keys
   "target": {
     "gradle-metadata-action": {
       "args": {
-        "GRADLE_VERSION": "8.0.2",
         "GRADLE_PROJECT_NAME": "example-project",
+        "GRADLE_PROJECT_DESCRIPTION": "example-project",
+        "GRADLE_PROJECT_GROUP": "com.example",
+        "GRADLE_PROJECT_PROFILE": "dev",
         "GRADLE_PROJECT_VERSION": "1.0.0-SNAPSHOT",
         "GRADLE_PROJECT_PROFILE": "production",
-        "GRADLE_PROJECT_TARGET_COMPATIBILITY": "11",
-        "GRADLE_PROJECT_SOURCE_COMPATIBILITY": "11",
-        "GRADLE_BUILD_ARTIFACT": "example-project-1.0.0-SNAPSHOT.jar"
+        "GRADLE_BUILD_ARTIFACT_ID": "example-project-1.0.0-SNAPSHOT",
+        "GRADLE_BUILD_ARTIFACT": "example-project-1.0.0-SNAPSHOT.jar",
+        "GRADLE_TARGET_COMPATIBILITY": "11",
+        "GRADLE_SOURCE_COMPATIBILITY": "11",
       }
     }
   }
