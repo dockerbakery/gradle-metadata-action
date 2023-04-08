@@ -75,6 +75,10 @@ gh_set_env "GRADLE_BUILD_ARTIFACT" $(gradle_get_prop "BUILD_ARTIFACT")
 gh_set_env "GRADLE_TARGET_COMPATIBILITY" "$(gradle_get_prop "TARGET_COMPATIBILITY")"
 gh_set_env "GRADLE_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILITY")"
 
+# Java
+gh_set_env "JAVA_VENDOR" "$(gradle_get_prop "JAVA_VENDOR")"
+gh_set_env "JAVA_VERSION" "$(gradle_get_prop "JAVA_VERSION")"
+
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 echo "Output:"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
