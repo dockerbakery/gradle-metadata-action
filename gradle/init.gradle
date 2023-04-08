@@ -34,7 +34,8 @@ class GradleBuildManifest implements Plugin<Project> {
                     "PROJECT_VERSION": project.version,
                     "PROJECT_PROFILE": "",
                     // Build
-                    "BUILD_ARTIFACT": "${project.name}-${project.version}",
+                    "BUILD_ARTIFACT_ID": "${project.name}-${project.version}",
+                    "BUILD_ARTIFACT": "${project.name}-${project.version}.jar",
                     // Compatibility
                     "SOURCE_COMPATIBILITY": "",
                     "TARGET_COMPATIBILITY": ""
