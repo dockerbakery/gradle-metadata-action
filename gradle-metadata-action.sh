@@ -1,5 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC2155
+# shellcheck disable=SC2269
 set -e
 
 GITHUB_ACTION_PATH=${GITHUB_ACTION_PATH}
@@ -76,8 +77,8 @@ gh_set_env "GRADLE_PROJECT_GROUP" "$(gradle_get_prop "PROJECT_GROUP")"
 gh_set_env "GRADLE_PROJECT_PROFILE" "$(gradle_get_prop "PROJECT_PROFILE")"
 gh_set_env "GRADLE_PROJECT_VERSION" "$(gradle_get_prop "PROJECT_VERSION")"
 # Build
-gh_set_env "GRADLE_BUILD_ARTIFACT_ID" $(gradle_get_prop "BUILD_ARTIFACT_ID")
-gh_set_env "GRADLE_BUILD_ARTIFACT" $(gradle_get_prop "BUILD_ARTIFACT")
+gh_set_env "GRADLE_BUILD_ARTIFACT_ID" "$(gradle_get_prop "BUILD_ARTIFACT_ID")"
+gh_set_env "GRADLE_BUILD_ARTIFACT" "$(gradle_get_prop "BUILD_ARTIFACT")"
 # Compatibility
 gh_set_env "GRADLE_TARGET_COMPATIBILITY" "$(gradle_get_prop "TARGET_COMPATIBILITY")"
 gh_set_env "GRADLE_SOURCE_COMPATIBILITY" "$(gradle_get_prop "SOURCE_COMPATIBILITY")"
