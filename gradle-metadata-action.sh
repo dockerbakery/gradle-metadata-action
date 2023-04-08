@@ -15,19 +15,25 @@ gh_set_env() {
     echo "$1=$2" >> "$GITHUB_ENV";
 }
 
+# Action Inputs
+GMA_CONTEXT="$1"
+GMA_VERSION="$2"
+
 # Gradle helpers
 GRADLE_WRAPPER="./gradlew"
+GRADLE_FLAGS=""
+
+if [[ -n "${GMA_VERSION}" ]]; then
+    GRADLE_FLAGS+="-Pversion=${GMA_VERSION} "
+fi
+
 gradle_exec() {
-    ${GRADLE_WRAPPER} --no-daemon --quiet "$@"
+    ${GRADLE_WRAPPER} --no-daemon --quiet "${GRADLE_FLAGS}" "$@"
 }
 
 gradle_get_prop() {
     jq -r ".${1}" "build-manifest.json"
 }
-
-# Action Inputs
-GMA_CONTEXT="$1"
-GMA_VERSION="$2"
 
 # Pre-flight checks
 # Switching Gradle context directory
