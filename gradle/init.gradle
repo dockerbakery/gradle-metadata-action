@@ -32,15 +32,23 @@ class GradleBuildManifest implements Plugin<Project> {
                     "PROJECT_DESCRIPTION": project.description,
                     "PROJECT_GROUP": project.group,
                     "PROJECT_VERSION": project.version,
+                    "PROJECT_PROFILE": "",
                     // Build
                     "BUILD_ARTIFACT": "${project.name}-${project.version}",
                     // Compatibility
-                    "SOURCE_COMPATIBILITY": project.sourceCompatibility.toString(),
-                    "TARGET_COMPATIBILITY": project.targetCompatibility.toString(),
+                    "SOURCE_COMPATIBILITY": "",
+                    "TARGET_COMPATIBILITY": ""
                 ]
 
                 if (project.hasProperty('profile')) {
                     manifest["PROJECT_PROFILE"] = project.profile
+                }
+
+                if (project.hasProperty('sourceCompatibility')) {
+                    manifest["SOURCE_COMPATIBILITY"] = project.sourceCompatibility.toString()
+                }
+                if (project.hasProperty('targetCompatibility')) {
+                    manifest["TARGET_COMPATIBILITY"] = project.targetCompatibility.toString()
                 }
 
                 SYSTEM_PROPERTIES.each { 
