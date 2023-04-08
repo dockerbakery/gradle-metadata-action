@@ -12,12 +12,8 @@ import org.gradle.api.Project
 
 class GradleBuildManifest implements Plugin<Project> {
     private static final String[] SYSTEM_PROPERTIES = [
-        "user.name", 
-        "java.vendor", 
-        "java.version", 
-        "os.arch", 
-        "os.name", 
-        "os.version",
+        "java.vendor",
+        "java.version",
     ]
 
     @Override
