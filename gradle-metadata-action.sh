@@ -18,15 +18,15 @@ gh_set_env() {
 }
 
 # Action Inputs
-GMA_CONTEXT="$1"
-GMA_VERSION="$2"
+GRADLE_METADATA_ACTION_CONTEXT="$1"
+GRADLE_METADATA_ACTION_VERSION="$2"
 
 # Gradle helpers
 GRADLE_WRAPPER="./gradlew"
 GRADLE_FLAGS=""
 
-if [[ -n "${GMA_VERSION}" ]]; then
-    GRADLE_FLAGS+="-Pversion=${GMA_VERSION} "
+if [[ -n "${GRADLE_METADATA_ACTION_VERSION}" ]]; then
+    GRADLE_FLAGS+="-Pversion=${GRADLE_METADATA_ACTION_VERSION} "
 fi
 
 gradle_exec() {
@@ -39,6 +39,8 @@ gradle_get_prop() {
 }
 
 # Pre-flight checks
+gh_set_env "GRADLE_METADATA_ACTION" "true"
+
 # Switching Gradle context directory
 gh_group "Activating Gradle context"
 if [ ! -f "${GRADLE_WRAPPER}" ]; then
@@ -51,9 +53,9 @@ if [ ! -f "${GRADLE_WRAPPER}" ]; then
     fi
 fi
 
-if [[ "${GMA_CONTEXT}" != "" ]]; then
-    echo "Gradle context specified, switching to ${GMA_CONTEXT}."
-    cd "${GMA_CONTEXT}" || {
+if [[ "${GRADLE_METADATA_ACTION_CONTEXT}" != "" ]]; then
+    echo "Gradle context specified, switching to ${GRADLE_METADATA_ACTION_CONTEXT}."
+    cd "${GRADLE_METADATA_ACTION_CONTEXT}" || {
         echo "[error]: Unable to load Gradle context!"
         exit 1
     }
