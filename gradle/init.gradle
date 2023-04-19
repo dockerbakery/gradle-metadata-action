@@ -29,7 +29,7 @@ class GradleBuildManifest implements Plugin<Project> {
                     "PROJECT_NAME": project.name,
                     "PROJECT_DESCRIPTION": project.description ? project.description : "",
                     "PROJECT_GROUP": project.group,
-                    "PROJECT_VERSION": project.version,
+                    "PROJECT_VERSION": project.version == "unspecified" ? "" : project.version,
                     "PROJECT_PROFILE": "",
                     // Build
                     "BUILD_ARTIFACT_ID": "${project.name}-${project.version}",
