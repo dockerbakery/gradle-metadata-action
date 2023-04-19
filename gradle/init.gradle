@@ -23,6 +23,11 @@ class GradleBuildManifest implements Plugin<Project> {
         project.task('build-manifest') {
             doLast {
                 def projectVersion = project.version == "unspecified" ? "" : project.version
+
+                def buildArtifact = "${project.name}"
+                if (projectVersion != "") {
+                    buildArtifact += "-${projectVersion}"
+                }
                 
                 def manifest = [
                     // Gradle
@@ -34,8 +39,8 @@ class GradleBuildManifest implements Plugin<Project> {
                     "PROJECT_VERSION": projectVersion,
                     "PROJECT_PROFILE": "",
                     // Build
-                    "BUILD_ARTIFACT_ID": "${project.name}-${projectVersion}",
-                    "BUILD_ARTIFACT": "${project.name}-${projectVersion}.jar",
+                    "BUILD_ARTIFACT_ID": "${buildArtifact}",
+                    "BUILD_ARTIFACT": "${buildArtifact}.jar",
                     // Compatibility
                     "SOURCE_COMPATIBILITY": "",
                     "TARGET_COMPATIBILITY": ""
