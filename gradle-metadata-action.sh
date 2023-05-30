@@ -107,6 +107,8 @@ echo "- description = ${GRADLE_PROJECT_DESCRIPTION}"
 echo "- group = ${GRADLE_PROJECT_GROUP}"
 echo "- profile = ${GRADLE_PROJECT_PROFILE}"
 echo "- version = ${GRADLE_PROJECT_VERSION}"
+echo "- target-compatibility = ${TARGET_COMPATIBILITY}"
+echo "- source-compatibility = ${SOURCE_COMPATIBILITY}"
 echo "- bake-file = ${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 gh_group_end
 
