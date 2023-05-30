@@ -97,6 +97,8 @@ gh_set_output "description" "${GRADLE_PROJECT_DESCRIPTION}"
 gh_set_output "group" "${GRADLE_PROJECT_GROUP}"
 gh_set_output "profile" "${GRADLE_PROJECT_PROFILE}"
 gh_set_output "version" "${GRADLE_PROJECT_VERSION}"
+gh_set_output "target-compatibility" "${TARGET_COMPATIBILITY}"
+gh_set_output "source-compatibility" "${SOURCE_COMPATIBILITY}"
 gh_set_output "bake-file" "${GITHUB_ACTION_PATH}/gradle-metadata-action.hcl"
 
 echo "Output:"
