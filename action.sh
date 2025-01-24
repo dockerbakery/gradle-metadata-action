@@ -4,6 +4,13 @@ GRADLE_METADATA_GRADLE_WRAPPER_ARGS="--no-daemon --info --init-script"
 GRADLE_METADATA_ACTION_CONTEXT=${GRADLE_METADATA_ACTION_CONTEXT:${1}}
 GRADLE_METADATA_ACTION_VERSION=${GRADLE_METADATA_ACTION_VERSION:${2}}
 
+echo "::group::Checking environment"
+if [[ -z "${JAVA_HOME}" ]]; then
+	echo "::error::Unable to locate Java installation, please consider using \"uses: actions/setup-java@v4\" to install Java."
+	exit 1
+fi
+echo "::endgroup::"
+
 echo "::group::Activating Gradle context"
 if [[ "${GRADLE_METADATA_ACTION_CONTEXT}" != "" ]]; then
     echo "Gradle context specified, switching to ${GRADLE_METADATA_ACTION_CONTEXT}."
