@@ -42,7 +42,7 @@ echo "::endgroup::"
 echo "::group::Processing Gradle project"
 if [[ -n "${GRADLE_METADATA_ACTION_VERSION}" ]]; then
 	echo "Set project version to: ${GRADLE_METADATA_ACTION_VERSION}"
-	GRADLE_METADATA_GRADLE_WRAPPER_ARGS+="-Pversion=${GRADLE_METADATA_ACTION_VERSION} "
+	GRADLE_METADATA_GRADLE_WRAPPER_ARGS+=" -Pversion=${GRADLE_METADATA_ACTION_VERSION} "
 fi
 CMD="${GRADLE_METADATA_GRADLE_WRAPPER} ${GRADLE_METADATA_GRADLE_WRAPPER_ARGS} "${GITHUB_ACTION_PATH}/gradle/init.gradle" gradle-metadata-action"
 echo "::debug::Executing command: ${CMD}"
