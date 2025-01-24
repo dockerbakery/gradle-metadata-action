@@ -20,6 +20,7 @@ jobs:
         uses: ./
         with:
           context: "test"
+          version: "1.0.0-SNAPSHOT"
 
       - name: Action output
         run: |
