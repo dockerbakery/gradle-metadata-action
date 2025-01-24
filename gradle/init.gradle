@@ -5,80 +5,96 @@
  * - https://github.com/nwillc/buildInfo/blob/master/src/main/groovy/com/github/nwillc/buildInfo/BuildInfoPlugin.groovy
  */
 
-import java.nio.file.Paths
 import groovy.json.JsonOutput
+import java.nio.file.Paths
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class GradleBuildManifest implements Plugin<Project> {
+class GradleMetadataAction implements Plugin<Project> {
     private static final String[] SYSTEM_PROPERTIES = [
         "java.vendor",
         "java.version",
     ]
 
+    static class Output {
+        String tmp = File.createTempDir()
+        String file = Paths.get(tmp, "gradle-metadata-action.json").toString()
+
+        void write(String payload) {
+            new File(file).write payload
+        }
+    }
+
+    static class GitHubAction {
+        void setEnv(String key, String value) {
+            new File(System.getenv("GITHUB_ENV")).append "${key}=${value}\n"
+        }
+        void setOutput(String key, String value) {
+            new File(System.getenv("GITHUB_OUTPUT")).append "${key}=${value}\n"
+        }
+    }
+
     @Override
     void apply(Project project) {
-        project.extensions.create("buildManifest", GradleBuildManifest.Extension)
+        project.extensions.create("GitHubActionExtension", GradleMetadataAction.GitHubAction)
+        project.extensions.create("GradleMetadataActionOutput", GradleMetadataAction.Output)
 
-        project.task('build-manifest') {
+        project.task('gradle-metadata-action') {
             doLast {
                 def projectVersion = project.version == "unspecified" ? "" : project.version
-
-                def buildArtifact = "${project.name}"
+                def buildArtifactID = "${project.name}"
                 if (projectVersion != "") {
-                    buildArtifact += "-${projectVersion}"
+                    buildArtifactID += "-${projectVersion}"
                 }
-                
-                def manifest = [
-                    // Gradle
-                    "GRADLE_VERSION": project.gradle.gradleVersion,
-                    // Project
-                    "PROJECT_NAME": project.name,
-                    "PROJECT_DESCRIPTION": project.description ? project.description : "",
-                    "PROJECT_GROUP": project.group,
-                    "PROJECT_VERSION": projectVersion,
-                    "PROJECT_PROFILE": "",
-                    // Build
-                    "BUILD_ARTIFACT_ID": "${buildArtifact}",
-                    "BUILD_ARTIFACT": "${buildArtifact}.jar",
-                    // Compatibility
-                    "SOURCE_COMPATIBILITY": "",
-                    "TARGET_COMPATIBILITY": ""
+
+                def dockerBakeFile = [
+                    "target": [
+                        "gradle-metadata-action": [
+                            "args": [
+                                "GRADLE_VERSION":               project.gradle.gradleVersion,
+                                "GRADLE_PROJECT_NAME":          project.name,
+                                "GRADLE_PROJECT_DESCRIPTION":   project.description ? project.description : "",
+                                "GRADLE_PROJECT_GROUP":         project.group,
+                                "GRADLE_PROJECT_VERSION":       projectVersion,
+                                "GRADLE_PROJECT_PROFILE":       project.hasProperty('profile') ? project.profile : "",
+                                "GRADLE_BUILD_ARTIFACT_ID":     "${buildArtifactID}",
+                                "GRADLE_BUILD_ARTIFACT":        "${buildArtifactID}.jar",
+                                "GRADLE_SOURCE_COMPATIBILITY":  project.hasProperty('sourceCompatibility') ? project.sourceCompatibility.toString() : "",
+                                "GRADLE_TARGET_COMPATIBILITY":  project.hasProperty('targetCompatibility') ? project.targetCompatibility.toString() : "",
+                            ]
+                        ]
+                    ]
                 ]
 
-                if (project.hasProperty('profile')) {
-                    manifest["PROJECT_PROFILE"] = project.profile
-                }
-
-                if (project.hasProperty('sourceCompatibility')) {
-                    manifest["SOURCE_COMPATIBILITY"] = project.sourceCompatibility.toString()
-                }
-                if (project.hasProperty('targetCompatibility')) {
-                    manifest["TARGET_COMPATIBILITY"] = project.targetCompatibility.toString()
-                }
-
-                SYSTEM_PROPERTIES.each { 
+                SYSTEM_PROPERTIES.each {
                     def key = it.replace('.', '_').toUpperCase()
-                    manifest[key] = System.getProperty(it)
+                    dockerBakeFile["target"]["gradle-metadata-action"]["args"][key] = System.getProperty(it)
                 }
 
-                println "Generating " + project.buildManifest.output
-                new File(project.buildManifest.output).write JsonOutput.prettyPrint(JsonOutput.toJson(manifest))
+                // Loop through the arguments and set the environment for the GitHub Actions
+                dockerBakeFile["target"]["gradle-metadata-action"]["args"].each { key, value ->
+                    project.GitHubActionExtension.setEnv(key, value)
+                }
+
+                project.GradleMetadataActionOutput.write JsonOutput.prettyPrint(JsonOutput.toJson(dockerBakeFile))
+
+                // Set the environment for the GitHub Actions
+                project.GitHubActionExtension.setEnv("GRADLE_METADATA_ACTION", "true")
+                project.GitHubActionExtension.setEnv("GRADLE_METADATA_OUTPUT_BAKE_FILE", project.GradleMetadataActionOutput.file)
+
+                // Set the output for the GitHub Actions
+                project.GitHubActionExtension.setOutput("bake-file", project.GradleMetadataActionOutput.file)
             }
         }
     }
-
-    static class Extension {
-        String output = Paths.get("build-manifest.json").toString()
-    }
 }
 
-class GradleBuildManifestPlugin implements Plugin<Gradle> {
+class GradleMetadataActionPlugin implements Plugin<Gradle> {
     void apply(Gradle gradle) {
         gradle.rootProject { project -> 
-            project.apply plugin: GradleBuildManifest
+            project.apply plugin: GradleMetadataAction
         }
     }
 }
 
-apply plugin: GradleBuildManifestPlugin
+apply plugin: GradleMetadataActionPlugin
