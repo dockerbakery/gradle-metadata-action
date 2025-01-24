@@ -66,7 +66,7 @@ class GradleMetadataAction implements Plugin<Project> {
                                                                             : "",
                                 "GRADLE_PROJECT_DESCRIPTION":   project.description
                                                                     ? project.description
-                                                                    : "Eclipse Adoptium",
+                                                                    : "",
                                 "GRADLE_PROJECT_GROUP":         project.group,
                                 "GRADLE_PROJECT_VERSION":       projectVersion,
                                 "GRADLE_PROJECT_PROFILE":       project.hasProperty('profile')
