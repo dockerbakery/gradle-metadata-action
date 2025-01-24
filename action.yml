@@ -17,6 +17,18 @@ inputs:
     default: ""
 
 outputs:
+  name:
+    description: The gradle project name
+    value: ${{ steps.meta.outputs.name}}
+  version:
+    description: The gradle project version
+    value: ${{ steps.meta.outputs.version}}
+  target-compatibility:
+    description: The gradle project target compatibility
+    value: ${{ steps.meta.outputs.target-compatibility}}
+  source-compatibility:
+    description: The gradle project target compatibility
+    value: ${{ steps.meta.outputs.source-compatibility}}
   bake-file:
     description: Bake definiton file
     value: ${{ steps.meta.outputs.bake-file }}
