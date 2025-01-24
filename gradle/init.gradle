@@ -41,26 +41,45 @@ class GradleMetadataAction implements Plugin<Project> {
 
         project.task('gradle-metadata-action') {
             doLast {
+                println "Generating the Gradle Metadata Action JSON file"
+
                 def projectVersion = project.version == "unspecified" ? "" : project.version
                 def buildArtifactID = "${project.name}"
                 if (projectVersion != "") {
                     buildArtifactID += "-${projectVersion}"
                 }
 
+                def currentJavaVersion = JavaVersion.current().toString()
+                println " - Current Java Version: ${currentJavaVersion}"
+
                 def dockerBakeFile = [
                     "target": [
                         "gradle-metadata-action": [
                             "args": [
                                 "GRADLE_VERSION":               project.gradle.gradleVersion,
-                                "GRADLE_PROJECT_NAME":          project.name,
-                                "GRADLE_PROJECT_DESCRIPTION":   project.description ? project.description : "",
+                                "GRADLE_PROJECT_NAME":          project.name
+                                                                    ? project.name
+                                                                    : project.applicationName
+                                                                        ? project.applicationName
+                                                                        : project.rootProject.name
+                                                                            ? project.rootProject.name
+                                                                            : "",
+                                "GRADLE_PROJECT_DESCRIPTION":   project.description
+                                                                    ? project.description
+                                                                    : "Eclipse Adoptium",
                                 "GRADLE_PROJECT_GROUP":         project.group,
                                 "GRADLE_PROJECT_VERSION":       projectVersion,
-                                "GRADLE_PROJECT_PROFILE":       project.hasProperty('profile') ? project.profile : "",
+                                "GRADLE_PROJECT_PROFILE":       project.hasProperty('profile')
+                                                                    ? project.profile
+                                                                    : "",
                                 "GRADLE_BUILD_ARTIFACT_ID":     "${buildArtifactID}",
                                 "GRADLE_BUILD_ARTIFACT":        "${buildArtifactID}.jar",
-                                "GRADLE_SOURCE_COMPATIBILITY":  project.hasProperty('sourceCompatibility') ? project.sourceCompatibility.toString() : "",
-                                "GRADLE_TARGET_COMPATIBILITY":  project.hasProperty('targetCompatibility') ? project.targetCompatibility.toString() : "",
+                                "GRADLE_SOURCE_COMPATIBILITY":  project.hasProperty('sourceCompatibility')
+                                                                    ? project.sourceCompatibility.toString()
+                                                                    : currentJavaVersion,
+                                "GRADLE_TARGET_COMPATIBILITY":  project.hasProperty('targetCompatibility')
+                                                                    ? project.targetCompatibility.toString()
+                                                                    : currentJavaVersion,
                             ]
                         ]
                     ]
@@ -79,11 +98,25 @@ class GradleMetadataAction implements Plugin<Project> {
                 project.GradleMetadataActionOutput.write JsonOutput.prettyPrint(JsonOutput.toJson(dockerBakeFile))
 
                 // Set the environment for the GitHub Actions
+                println " - Setting the environment for the GitHub Actions"
                 project.GitHubActionExtension.setEnv("GRADLE_METADATA_ACTION", "true")
                 project.GitHubActionExtension.setEnv("GRADLE_METADATA_OUTPUT_BAKE_FILE", project.GradleMetadataActionOutput.file)
 
                 // Set the output for the GitHub Actions
+                println " - Setting the output for the GitHub Actions"
+                project.GitHubActionExtension.setOutput("name", project.name)
+                project.GitHubActionExtension.setOutput("version", project.version)
+                project.GitHubActionExtension.setOutput(
+                    "sourceCompatibility",
+                    dockerBakeFile["target"]["gradle-metadata-action"]["args"]["GRADLE_SOURCE_COMPATIBILITY"]
+                )
+                project.GitHubActionExtension.setOutput(
+                    "targetCompatibility",
+                    dockerBakeFile["target"]["gradle-metadata-action"]["args"]["GRADLE_TARGET_COMPATIBILITY"]
+                )
                 project.GitHubActionExtension.setOutput("bake-file", project.GradleMetadataActionOutput.file)
+
+                println "Gradle Metadata Action JSON file generated: ${project.GradleMetadataActionOutput.file}"
             }
         }
     }
@@ -91,7 +124,7 @@ class GradleMetadataAction implements Plugin<Project> {
 
 class GradleMetadataActionPlugin implements Plugin<Gradle> {
     void apply(Gradle gradle) {
-        gradle.rootProject { project -> 
+        gradle.rootProject { project ->
             project.apply plugin: GradleMetadataAction
         }
     }
