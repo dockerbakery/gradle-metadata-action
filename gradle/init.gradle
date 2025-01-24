@@ -41,7 +41,7 @@ class GradleMetadataAction implements Plugin<Project> {
 
         project.task('gradle-metadata-action') {
             doLast {
-                println "Generating the Gradle Metadata Action JSON file"
+                println "Generating the Gradle Metadata Action JSON file:"
 
                 def projectVersion = project.version == "unspecified" ? "" : project.version
                 def buildArtifactID = "${project.name}"
@@ -50,7 +50,7 @@ class GradleMetadataAction implements Plugin<Project> {
                 }
 
                 def currentJavaVersion = JavaVersion.current().toString()
-                println " - Current Java Version: ${currentJavaVersion}"
+                println "  Current Java Version: ${currentJavaVersion}"
 
                 def dockerBakeFile = [
                     "target": [
@@ -99,12 +99,12 @@ class GradleMetadataAction implements Plugin<Project> {
                 project.GradleMetadataActionOutput.write JsonOutput.prettyPrint(JsonOutput.toJson(dockerBakeFile))
 
                 // Set the environment for the GitHub Actions
-                println " - Setting the environment for the GitHub Actions"
+                println "  Setting the environment for the GitHub Actions"
                 project.GitHubActionExtension.setEnv("GRADLE_METADATA_ACTION", "true")
                 project.GitHubActionExtension.setEnv("GRADLE_METADATA_OUTPUT_BAKE_FILE", project.GradleMetadataActionOutput.file)
 
                 // Set the output for the GitHub Actions
-                println " - Setting the output for the GitHub Actions"
+                println "  Setting the output for the GitHub Actions"
                 project.GitHubActionExtension.setOutput("name", project.name)
                 project.GitHubActionExtension.setOutput("version", project.version)
                 project.GitHubActionExtension.setOutput(
@@ -117,7 +117,7 @@ class GradleMetadataAction implements Plugin<Project> {
                 )
                 project.GitHubActionExtension.setOutput("bake-file", project.GradleMetadataActionOutput.file)
 
-                println "Gradle Metadata Action JSON file generated: ${project.GradleMetadataActionOutput.file}"
+                println "  Gradle Metadata Action JSON file generated: ${project.GradleMetadataActionOutput.file}"
             }
         }
     }
