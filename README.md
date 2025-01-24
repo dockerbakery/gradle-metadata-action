@@ -121,13 +121,13 @@ Following inputs can be used as `step.with` keys
 
 Following outputs can be used as `steps.<step_id>.outputs` keys
 
-| Name        | Type   | Description                                                                 |
-| ----------- | ------ | --------------------------------------------------------------------------- |
-| `name`      | String | Name of the Gradle project.                                                 |
-| `version`   | String | Version of the Gradle project.                                              |
+| Name                   | Type   | Description                                 |
+| ---------------------- | ------ | ------------------------------------------- |
+| `name`                 | String | Name of the Gradle project.                 |
+| `version`              | String | Version of the Gradle project.              |
 | `source-compatibility` | String | Source compatibility of the Gradle project. |
 | `target-compatibility` | String | Target compatibility of the Gradle project. |
-| `bake-file` | String | Path to the generated bake file. Default is `./gradle-metadata-bake.json`. |
+| `bake-file`            | String | Path to the generated bake file.            |
 
 
 ## Resources
