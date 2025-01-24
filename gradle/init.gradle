@@ -80,7 +80,8 @@ class GradleMetadataAction implements Plugin<Project> {
                                 "GRADLE_TARGET_COMPATIBILITY":  project.hasProperty('targetCompatibility')
                                                                     ? project.targetCompatibility.toString()
                                                                     : currentJavaVersion,
-                            ]
+                            ],
+                            "labels": [],
                         ]
                     ]
                 ]
