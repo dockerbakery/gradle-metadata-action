@@ -14,4 +14,4 @@ touch "$GITHUB_ENV" "$GITHUB_OUTPUT"
 export GRADLE_METADATA_ACTION_CONTEXT=test
 export GRADLE_METADATA_ACTION_VERSION=1.0.0
 
-./gradle-metadata-action.sh
+./action.sh
