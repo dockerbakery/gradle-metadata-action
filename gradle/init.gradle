@@ -27,7 +27,7 @@ class GradleMetadataAction implements Plugin<Project> {
 
     static class GitHubAction {
         void setEnv(String key, String value) {
-            new File(System.getenv("GITHUB_ENV")).append "${key}=${value}\n"
+            new File(System.getenv("GITHUB_ENV")).append "${key}=\"${value}\"\n"
         }
         void setOutput(String key, String value) {
             new File(System.getenv("GITHUB_OUTPUT")).append "${key}=${value}\n"
