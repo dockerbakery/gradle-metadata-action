@@ -44,14 +44,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v4
+        uses: docker/metadata-action@v5
         with:
           images: |
             name/app
@@ -64,14 +62,14 @@ jobs:
 
       - name: Gradle meta
         id: gradle-meta
-        uses: dockerbakery/gradle-metadata-action@v2
+        uses: dockerbakery/gradle-metadata-action@v3
 
-      - uses: docker/bake-action@v2
+      - uses: docker/bake-action@v6
         with:
           files: |
             ./docker-bake.hcl
-            ${{ steps.meta.outputs.bake-file }}
-            ${{ steps.gradle-meta.outputs.bake-file }}
+            cwd://${{ steps.meta.outputs.bake-file }}
+            cwd://${{ steps.gradle-meta.outputs.bake-file }}
           targets: build
 ```
 
