@@ -41,14 +41,8 @@ fi
 echo "::endgroup::"
 
 source "${GITHUB_ENV}"
-echo "::group::Gradle Metadata"
+echo "::group::Bake definition"
 cat "${GRADLE_METADATA_OUTPUT_BAKE_FILE}"
 echo ""; echo "::endgroup::"
-
-if [ "$(command -v docker)" ]; then
-	echo "::group::Bake definition"
-	docker buildx bake -f "${GRADLE_METADATA_OUTPUT_BAKE_FILE}" --print gradle-metadata-action
-	echo "::endgroup::"
-fi
 
 exit 0
