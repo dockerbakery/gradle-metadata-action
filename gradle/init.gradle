@@ -107,11 +107,11 @@ class GradleMetadataAction implements Plugin<Project> {
                 project.GitHubActionExtension.setOutput("name", project.name)
                 project.GitHubActionExtension.setOutput("version", project.version)
                 project.GitHubActionExtension.setOutput(
-                    "sourceCompatibility",
+                    "source-compatibility",
                     dockerBakeFile["target"]["gradle-metadata-action"]["args"]["GRADLE_SOURCE_COMPATIBILITY"]
                 )
                 project.GitHubActionExtension.setOutput(
-                    "targetCompatibility",
+                    "target-compatibility",
                     dockerBakeFile["target"]["gradle-metadata-action"]["args"]["GRADLE_TARGET_COMPATIBILITY"]
                 )
                 project.GitHubActionExtension.setOutput("bake-file", project.GradleMetadataActionOutput.file)
