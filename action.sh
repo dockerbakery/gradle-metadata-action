@@ -8,6 +8,8 @@ echo "::group::Checking environment"
 if [[ -z "${JAVA_HOME}" ]]; then
 	echo "::error::Unable to locate Java installation, please consider using \"uses: actions/setup-java@v4\" to install Java."
 	exit 1
+else
+	echo "Java installation found at: ${JAVA_HOME}"
 fi
 echo "::endgroup::"
 
