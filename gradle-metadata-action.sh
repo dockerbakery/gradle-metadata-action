@@ -5,6 +5,18 @@ GRADLE_METADATA_ACTION_CONTEXT=${GRADLE_METADATA_ACTION_CONTEXT:${1}}
 GRADLE_METADATA_ACTION_VERSION=${GRADLE_METADATA_ACTION_VERSION:${2}}
 
 echo "::group::Activating Gradle context"
+if [[ "${GRADLE_METADATA_ACTION_CONTEXT}" != "" ]]; then
+    echo "Gradle context specified, switching to ${GRADLE_METADATA_ACTION_CONTEXT}."
+    cd "${GRADLE_METADATA_ACTION_CONTEXT}" || {
+        echo "::error::Failed to switch to Gradle context"
+        exit 1
+    }
+else
+    echo "Gradle context not specified, using current directory."
+fi
+echo "::endgroup::"
+
+echo "::group::Detecting Gradle wrapper"
 if [ ! -f "${GRADLE_METADATA_GRADLE_WRAPPER}" ]; then
 	if [ ! "$(command -v gradle)" ]; then
 		echo "::error::Neither Gradle wrapper nor Gradle CLI found"
