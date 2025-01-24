@@ -29,5 +29,5 @@ runs:
         # dockerbakery/gradle-metadata-action
         export GRADLE_METADATA_ACTION_CONTEXT="${{ inputs.context }}"
         export GRADLE_METADATA_ACTION_VERSION="${{ inputs.version }}"
-        "${{ github.action_path }}gradle-metadata-action.sh"
+        "${{ github.action_path }}/action.sh"
       shell: bash
