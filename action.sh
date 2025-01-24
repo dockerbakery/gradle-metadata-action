@@ -15,13 +15,13 @@ echo "::endgroup::"
 
 echo "::group::Activating Gradle context"
 if [[ "${GRADLE_METADATA_ACTION_CONTEXT}" != "" ]]; then
-    echo "Gradle context specified, switching to ${GRADLE_METADATA_ACTION_CONTEXT}."
-    cd "${GRADLE_METADATA_ACTION_CONTEXT}" || {
-        echo "::error::Failed to switch to Gradle context"
-        exit 1
-    }
+	echo "Gradle context specified, switching to ${GRADLE_METADATA_ACTION_CONTEXT}."
+	cd "${GRADLE_METADATA_ACTION_CONTEXT}" || {
+		echo "::error::Failed to switch to Gradle context"
+		exit 1
+	}
 else
-    echo "Gradle context not specified, using current directory."
+	echo "Gradle context not specified, using current directory."
 fi
 echo "::endgroup::"
 
@@ -40,6 +40,10 @@ fi
 echo "::endgroup::"
 
 echo "::group::Processing Gradle project"
+if [[ -n "${GRADLE_METADATA_ACTION_VERSION}" ]]; then
+	echo "Set project version to: ${GRADLE_METADATA_ACTION_VERSION}"
+	GRADLE_METADATA_GRADLE_WRAPPER_ARGS+="-Pversion=${GRADLE_METADATA_ACTION_VERSION} "
+fi
 CMD="${GRADLE_METADATA_GRADLE_WRAPPER} ${GRADLE_METADATA_GRADLE_WRAPPER_ARGS} "${GITHUB_ACTION_PATH}/gradle/init.gradle" gradle-metadata-action"
 echo "::debug::Executing command: ${CMD}"
 ${CMD}
